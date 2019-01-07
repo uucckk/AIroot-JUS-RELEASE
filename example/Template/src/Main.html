@@ -1,0 +1,39 @@
+<@import value="util.*" />
+<css>
+	body{
+		color:#ff0000;
+	}
+</css>
+<li>
+	{data.name}
+	{value}
+</li>
+<script>
+	import util.Template;
+	var tp = null;
+	function init(data){
+		tp = new Template(dom);
+		tp.dataContext = data;
+		var html = <div>
+			<component.hbox>Hello World!</component.hbox>
+		</div>();
+		console.log(html);
+		dom.appendChild(html);
+	}
+	public set name(value){
+		tp.dataContext.data.name = value;
+	}
+	
+	public get name(){
+		return tp.dataContext.data.name;
+	}
+	
+	public set value(value){
+		tp.dataContext.value = value;
+	}
+	
+	public get value(){
+		return tp.dataContext.value;
+	}
+	
+</script>
