@@ -1,0 +1,85 @@
+<module>
+	<style>
+		.elemLeft{
+			padding-left:20px;	
+			line-height:20px;
+			font-family:'Microsoft YaHei';
+		}
+		.elemLeft span{
+			display:block;
+			float:left;
+			width:22px;
+			background:url(themes/images/tree/folder.png) no-repeat scroll 0 -2px;
+		}
+		.elemLeft span.open{
+			background-position: 0 -52px;
+		}
+		.elemLeft span.file{
+			background-position: 0 -102px;
+		}
+		.$menu{
+			border:#999999 1px solid;
+			background-color:#f0f0f0;
+			padding:4px;
+			color:#444444;
+			font-size:14px;
+			font-family:'Microsoft YaHei';
+			min-width:150px;
+		}
+	</style>
+	<div id="content" style='overflow:auto;font-size:13px;margin-left:-16px;height:100%'>
+	</div>
+	
+	<script>
+		var _self = $(dom);
+		private var clickEvt = null;
+		private var count = 0;
+		var target = this;
+		public function init(){
+			
+			asjs.load("api/ctrl?do=ls&path=/",function(e){
+				var xml = new XML(e.target.data).child("data");
+				for(var i = 0;i<xml.length();i++){
+					addTree(#content,xml.at(i));
+				}
+			});
+		}
+	
+		private function addTree(node,obj){
+			node.append("<div class='elemLeft' id='$d" + count + "' path='" + obj.child("@path") + "' index='" + count + "' ><span class='" + (obj.child("@isdir") == "true" ? "" : "file") + "'>&nbsp;</span><a isdir='" + obj.child("@isdir") + "' href='javascript:@this.loadTree(" + count + ",\"" + obj.child("@path").toString().replace(/\\/g,"/") +"\");' style='color:" + (obj.child("@isdir") == "true" ? (obj.child("@isprj") == "true" ? "#987654;font-weight:bold" : "#456789;font-weight:bold") : "#555555") + "'>" + obj.child("@name") + "</a></div>");
+			count ++;
+		}
+	
+	
+		/**
+		 * 加载指定路径树
+		 */
+		public function loadTree(index,value,refresh){
+			var node = $("#$d" + index);
+			if(node.children("div").length != 0 && !refresh){
+				node.children("div").remove();
+				node.find("span").removeClass("open");
+			}else{
+				node.children("div").remove();
+				node.find("span").addClass("open");
+				asjs.load("api/ctrl?do=ls&path=" + value,function(e){
+					var xml = new XML(e.target.data).child("data");
+					for(var i = 0;i<xml.length();i++){
+						addTree(node,xml.at(i));
+					}
+				});
+			}
+
+			clickEvt({type:"click",target:{data:value}});
+			
+		}
+
+		/**
+		 * 添加时间侦听器
+		 */
+		public function addEventListener(event,func){
+			clickEvt = func;
+		}
+		
+	</script>
+</module>

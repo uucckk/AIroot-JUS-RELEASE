@@ -1,0 +1,161 @@
+<@import value="component.*" />
+<component.vbox>
+	<style>
+		body{
+			font-size:14px;
+		}
+		.title{
+			padding:5px;
+			padding-left:10px;
+			font-size:12px;
+			font-weight:bold;
+			border-bottom:1px solid #dddddd;
+		}
+		.elem{
+			border-bottom:solid 1px #eeeeee;
+			height:36px;
+			padding:2px;
+			padding-left:10px;
+		}
+		.elem a{
+			color:#456789;
+			font-weight:bold;
+			font-family:Microsoft YaHei;
+		}
+		
+		.elem a:hover{
+			text-decoration:underline;
+		}
+	</style>
+	<div style="border-bottom:1px solid #eeeeee;line-height:36px;padding-left:5px;padding-right:5px;">模块目录
+		<span><input id="txt" style="width:200px;" /></span>
+	</div>
+	<component.Tabs width="100%" height="100%">
+		<@override>
+			<style id="style">
+				body{
+					background-color:#fefefe;
+					font-family:sans-serif;
+					font-size:14px;
+				}
+				
+				
+				#tabs{
+					overflow:hidden;
+					background-color:#fafafa;
+					line-height:32px;
+					height:36px;
+					border-bottom:1px solid #eeeeee;
+					
+				}
+				
+				
+				
+				#tabs ul{
+					padding:0px;
+					margin:0px;
+					list-style:none;
+				}
+				#tabs ul li{
+					float:left;
+					display:block;
+					position:relative;
+					padding-left:10px;
+					padding-right:15px;
+					padding-bottom:0px;
+					padding-top:1px;
+					border:1px solid #dddddd;
+					border-bottom:none;
+					margin:2px;
+					margin-top:4px;
+					margin-bottom:0px;
+					cursor:default;
+					color:#cccccc;
+		
+				}
+				#tabs ul li .closeBtn{
+					display:block;
+					position:absolute;
+					overflow:hidden;
+					width:11px;
+					height:11px;
+					top:1px;
+					right:1px;
+					background: url(themes/default/images/tabs/tabspage_icon.png) no-repeat;
+					
+				}
+				
+				#tabs ul li .closeBtn:hover{
+					background-position: 0 -50px;
+				}
+				
+				#tabs ul li.selected{
+					background-color:#fefefe;
+					color:#000000;
+				}
+				
+				#tabs ul li a{
+					width:0px;
+				}
+				
+				#leftBtn{
+					text-align:center;
+					border-right:1px solid #999999;
+				}
+				
+				
+				#rightBtn{
+					text-align:center;
+					border-left:1px solid #999999;
+				}
+				
+				
+			</style>
+		</@override>
+		<vbox label="主类目录" width="100%" height="100%" >
+			<div id='mdl' width="100%" height="100%" style="border-right:solid 1px #000000;overflow:auto;">
+				
+			</div>
+		</vbox>
+		<vbox label="自定义类目录" width="100%" height="100%" >
+			<div id='rdl' width="100%" height="100%" style="overflow:auto;">
+				
+			</div>
+		</vbox>
+	</component.Tabs>
+	<script>
+		var _self = $(dom);
+		function init(){
+			loadMainClass();
+			loadRootClass();
+		}
+
+		/**
+		 * 加载系统主类
+		 */
+		private function loadMainClass(){
+			asjs.load("api/ctrl?do=lsRootClass",function(e){
+				var xml = new XML(e.target.data).child("data");
+				for(var i = 0;i<xml.length();i++){
+					#mdl.append("<div class='elem'><a href='class/" +  xml.at(i).child("@class") + "' target='_blank'>" + xml.at(i).child("@class") + "</a></div>");
+				}
+			});
+		}
+
+		/**
+		 * 加载工程根主类
+		 */
+		public function loadRootClass(path){
+			if(!path){
+				return;
+			}
+			asjs.load("api/ctrl?do=lsRootClass&path=" + path,function(e){
+				#rdl.children().remove();
+				var xml = new XML(e.target.data).child("data");
+				for(var i = 0;i<xml.length();i++){
+					#rdl.append("<div class='elem'><a href='class/" +  xml.at(i).child("@class") + "' target='_blank'>" + xml.at(i).child("@class") + "</a></div>");
+				}
+			});
+		}
+	</script>
+</component.vbox>

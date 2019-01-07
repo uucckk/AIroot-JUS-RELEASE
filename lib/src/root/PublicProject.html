@@ -1,0 +1,49 @@
+<@import value="root.*" />
+<module>
+	<div style="height:16px;line-height:16px;margin-bottom:5px;background-color:#fefefe;border-bottom:solid #eeeeee 1px;padding-left:10px;"></div>
+	<DiskView id="file" style="height:300px;background-color:#fefefe;"></DiskView>
+	<div style="line-height:36px;height:36px;"><span style="font-size:13px;">发布目录：</span><input id="path" type="type" value="" style="width:540px;" />&nbsp;&nbsp;<input id='submit' type="button" value="发布工程"  /></div>
+	<script>
+		var _self = $(dom);
+		var src = null;
+		function init(src:String){
+			this.src = src;
+			if(!src){
+				loadProjectStat();
+			}
+			file.addEventListener("click",function(e){
+				#path.val(e.target.data + "/" + src.substring(src.lastIndexOf("\\") + 1) + "/");
+			});
+
+			#submit.bind("click",submit);
+			
+		}
+
+		private function loadProjectStat(){
+			asjs.send("api/ctrl?do=projectStat",function(e){
+				var xml = new XML(e.target.data);
+				if(xml.child("mess") == "success"){
+					var pub = xml.child("pubList");
+					if(pub.length()>0){
+						pub = pub.child("pub");
+					}
+					if(pub.length()>0){
+						#path.val(pub.at(0).toString());
+					}
+				}else{
+					alert(xml.child("messdetail"));
+				}
+			});
+		}
+
+		/**
+		 * 提交
+		 */
+		public function submit(){
+			asjs.send("api/ctrl?do=export",function(e){
+				alert(e.target.data);
+			},{src:src,dest:#path.val()});
+		}
+		
+	</script>
+</module>

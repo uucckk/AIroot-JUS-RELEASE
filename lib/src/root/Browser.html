@@ -1,0 +1,37 @@
+<@import value="component.*" />
+<@import value="root.*" />
+<vbox width="100%" height="100%">
+	<style>
+		body{
+			background-color:#ffffff;
+			font-size:13px;
+		}
+		.header{
+			background-color:#eeeeee;
+			line-height:36px;
+			border-bottom:1px solid #dddddd;
+			overflow:hidden;
+		}
+	</style>
+	<hbox class="header" height="36" width="100%">
+		<div width="100%" style="padding-left:10px;"> 地址栏：<input id="ipt" type="text" value="project/index.html"  /></div>
+		<div width="60" style="padding-left:10px;"><input type="button" value="转到" onclick="@this.gotoEvt();" /></div>
+	</hbox>
+	<htmlloader id="loader" width="100%" height="100%" url="project/index.html" />
+	<script>
+		var _self = $(dom);
+		function init():void{
+			
+		}
+
+		private function gotoEvt(e:Event):void{
+			loader.url = ipt.value;
+		}
+
+		public function trigger(e):void{
+			super.trigger(e);
+			#ipt.width(_self.width() - 200);
+		}
+		
+	</script>
+</vbox>

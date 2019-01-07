@@ -1,0 +1,49 @@
+<@import value="component.*" />
+<module>
+	<style>
+		body{
+			text-align:center;
+			padding-top:10px;
+		}
+	</style>
+	<datagrid>
+		<thead>
+			<tr>
+				<th>目录</th><th>文件夹名称</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td id="root" update="true"></td><td><input id="dir" /></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input id="sub" type="button" value="提交" /></td>
+			</tr>
+		</tbody>
+	</datagrid>
+	
+	<script>
+		var _self = $(dom);
+		var path = null;
+		/**
+		 * @param path		路径
+		 * @param target	刷新目标
+		 * @param index		指定节点
+		 */
+		function init(path:String = null,target,index){
+			#root.text(path);
+			#sub.click(function(){
+				var data = asjs.load("api/ctrl?do=createNewDir&path=" + #root.text() + "/" + #dir.val(),function(e){
+					var xml = new XML(e.target.data);
+					if(xml.child("mess") == "success"){
+						target.refresh(index);
+					}else{
+						alert(e.target.data);
+					}
+				},{});
+				
+			});
+		}
+		
+	</script>
+</module>

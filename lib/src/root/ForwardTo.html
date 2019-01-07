@@ -1,0 +1,44 @@
+<module>
+	<style>
+		body{
+			padding:10px;
+			background-color:#eeeeee;
+			box-shadow: 0px 0px 15px #000000;
+		}
+
+		span a{
+			color:#ffffff;
+			text-align:center;
+			display:block;
+			margin-left:auto;
+			margin-right:auto;
+			width:200px;
+			height:36px;
+			line-height:36px;
+			background-color:#456789;
+		}
+	</style>
+	<div style="padding:10px 10px 20px 10px;text-align:center;">
+		现在我们为您转到[<label id="msg"></label>]的测试环境。
+	</div>
+	<span><a id="label" target="_blank">确认</a></span>
+	<script>
+		var _self = $(dom);
+		function init(){
+			_self.css({width:450,height:100});
+			_self.css("position","absolute");
+			_self.css("top",($(window).height() - _self.height())/2 - 100);
+			_self.css("left",($(window).width() - _self.width())/2);
+			_self.css("border","#dddddd solid 1px");
+		}
+		
+		public function setName(value){
+			#msg.text(value);
+		}
+		
+		public function setUrl(value){
+			#label.attr("href",value);
+			#label.click(function(e){_self.remove()});
+		}
+	</script>
+</module>

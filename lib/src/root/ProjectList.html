@@ -1,0 +1,222 @@
+<@import value='component.*' />
+<vbox height="100%" width="100%">
+	<style>
+		body{
+			background-color:#eeeeee;
+		}
+		.elemLeft{
+			padding-left:20px;	
+			line-height:20px;
+			font-family:'Microsoft YaHei';
+		}
+		.elemLeft span{
+			display:block;
+			float:left;
+			width:22px;
+			background:url(themes/default/images/tree/folder.png) no-repeat scroll 0 -2px;
+		}
+		.elemLeft span.open{
+			background-position: 0 -52px;
+		}
+		.elemLeft span.file{
+			background-position: 0 -102px;
+		}
+		.$rightList{
+			border:#999999 1px solid;
+			background-color:#f0f0f0;
+			padding:4px;
+			color:#444444;
+			font-size:14px;
+			font-family:'Microsoft YaHei';
+			
+		}
+		
+		.$rightList li{
+			list-style:none;
+		}
+		
+		.$rightList a{
+			color:#000000;
+		}
+		
+
+	</style>
+	
+	<div id="content" style='overflow:auto;font-size:13px;margin-left:-16px;padding:10px;' height="100%" width="100%">
+		<tree id="tree" dataLabel="name" dataField="@isopen" width="100%" height="100%" >
+			<@override>
+				<style id="style">
+					body{
+						font-size:13px;
+					}
+					ul{
+						margin:0px;
+						padding:0px;
+						list-style:none;
+						
+					}
+					
+					ul li{
+						margin:0px;
+						padding:0px;
+						line-height:20px;
+						overflow:hidden;
+						margin-left:10px;
+					}
+					
+					.elem .label{
+						padding-left:4px;
+						color:#456789;
+						font-weight:bold;
+					}
+					
+					.elem .dir{
+						padding-left:10px;
+						padding-right:10px;
+						background:url(@res('folder.png')) no-repeat scroll 0 -2px;
+					}
+					
+					.elem .dirc{
+						padding-left:5px;
+						padding-right:5px;
+						background: url(@res('tree_icons.png')) no-repeat -2px -1px;
+					}
+					
+					.elem .dirc{
+						padding-left:5px;
+						padding-right:5px;
+						background: url(@res('tree_icons.png')) no-repeat -2px -1px;
+					}
+					.elem .dirc.expend{
+						background: url(@res('tree_icons.png')) no-repeat -18px -1px;
+					}
+					.closeNode{
+						overflow:hidden;
+						//height:0px;
+					}
+				</style>
+			</@override>
+			
+			
+		</tree>
+	</div>
+	
+	
+	<script>
+		import component.Loader;
+		var _self = $(dom);
+		private var editFunc = null;//编辑文本
+		private var debugFunc = null;//调试函数
+		function init(){
+
+			
+			tree.filter = function(e,obj,index){
+				return {
+							label:"<span index='" + index + "' path='" + obj.child("path").toString() + "' isdir='" + obj.child("isdir").toString() + "' " + (obj.child("isprj") == "true" ? "style='color:#987654;'" : "") + ">" + e + "</span>",
+							icon:(obj.child("isdir") == "true" ? null: "background-position:0px -102px"),
+							isContent:obj.child("isdir") == "true" ? true : false
+						};
+			};
+			
+			tree.onExpend = function(e){
+				var loader:Loader = new Loader();
+				loader.onLoad = function(e){
+					return tree.initTree(new XML(e.target.data).child("data"),0);
+				}
+				loader.load("/index.api?do=ls",{path:e.target.data.child("path")});
+				return loader.content();
+			};
+
+			tree.onClick = function(e){
+				//trace("click",e.target.data.toXMLString());
+			}
+			
+			#content.contextMenu(
+					function(e){
+						if($(e.target).attr("isdir") == "true"){
+							return true;
+						}else{
+							return false;
+						}
+					},
+					"<ul class='$rightList'>
+					<li><a href='javascript:void(0);'>新建文件夹</a></li>
+					<li><a href='javascript:void(0);'>新建模块</a></li>
+					<li><a href='javascript:void(0);'>新建文件</a></li>
+					<li><a href='javascript:void(0);'>属性</a></li>
+					</ul>",function(event,selected){
+						switch(selected.text()){
+						case "新建文件夹" :
+							var dialog = new component.Dialog("新建文件夹",500,130);
+							dialog.load("root.CreateNewDir",[$(event.target).attr("path"),tree,$(event.target).attr("index")]);
+							$("body").addChild(dialog);
+							break;
+						case "新建模块" :
+							var dialog = new component.Dialog("新建模块",500,130);
+							dialog.load("root.CreateNewModule",[$(event.target).attr("path"),tree,$(event.target).attr("index")]);
+							$("body").addChild(dialog);
+							break;
+						case "新建文件" :
+							var dialog = new component.Dialog("新建文件",500,130);
+							dialog.load("root.CreateNewFile",[$(event.target).attr("path"),tree,$(event.target).attr("index")]);
+							$("body").addChild(dialog);
+							break;
+						}
+						
+					});
+			#content.contextMenu(
+					function(e){
+						if($(e.target).attr("isdir") == "true"){
+							return false;
+						}else{
+							return true;
+						}
+					},
+					"<ul class='$rightList'>
+					<li><a href='javascript:void(0);'>查看</a></li>
+					<li><a href='javascript:void(0);'>编辑</a></li>
+					<li><a href='javascript:void(0);'>重名名</a></li>
+					<li><a href='javascript:void(0);'>属性</a></li>
+					</ul>",function(event,selected){
+						switch(selected.text()){
+						case "查看" :
+							if(editFunc){
+								editFunc({type:"chm",target:{data:$(event.target).attr("path")}});
+							}
+							break;
+							break;
+						case "重名名" :
+							
+							break;
+						case "属性" :
+							
+							break;
+						case "编辑" :
+							editFunc({type:"test",target:{data:$(event.target).attr("path")}});
+							break;
+						}
+						
+					});
+			
+			asjs.load("/index.api?do=ls&path=/",function(e){
+				var xml = new XML(e.target.data).child("data");
+				tree.dataProvider = xml;
+			});
+		}
+
+		/**
+		 * 事件处理
+		 */
+		public function addEventListener(event,listener){
+			switch(event){
+			case "editPage" :
+				editFunc = listener;
+				break;
+			case "debug" :
+				debugFunc = listener;
+				break;
+			}
+		}
+		
+	</script>
+</vbox>

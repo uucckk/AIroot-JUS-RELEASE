@@ -1,0 +1,58 @@
+<@import value="core.*" />
+<module>
+	<style>
+		body{
+			overflow:hidden;
+			background-color:#e9e9e9;
+			border-bottom:1px solid #000000;
+			font-family:sans-serif;
+		}
+		.menu{
+			margin:0px;
+			padding:0px;
+		}
+		.menu li{
+			float:left;
+			height:32px;
+			margin:1px;
+			padding-left:32px;
+			padding-right:5px;
+			line-height:32px;
+			font-size:13px;
+			cursor:pointer;
+		}
+		
+		.menu li.run{
+			background:url(images/run.png) no-repeat 8px 8px #eeeeee;
+			
+		}
+		.menu li.dir{
+			background:url(images/dir.png) no-repeat 8px 8px #eeeeee;
+		}
+		.menu li.new{
+			background:url(images/page.png) no-repeat 8px 8px #eeeeee;
+		}
+	</style>
+	<div id="header" style="padding:2px;padding-left:5px;padding-right:5px;position:relative;">
+		<div style="float:left">
+			JUIS2 公共开发平台
+			<div style="font-size:9px;">JUIS2 Public Development.</div>
+		</div>
+		<div style="float:right;">
+			<ul class="menu">
+				<li class="run">调试</li>
+				<li class="new" >发布工程</li>
+			</ul>
+		</div>
+	</div>
+	<script>
+		import component.Dialog;
+		var _self = $(dom);
+		public function pubProject(){
+			var dialog = new component.Dialog({title:"发布工程"});
+			dialog.load("root.PublicProject");
+			$("body").addChild(dialog);
+		}
+	
+	</script>
+</module>

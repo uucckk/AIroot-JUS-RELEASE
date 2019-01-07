@@ -1,0 +1,147 @@
+<@import value="component.*" />
+<vbox>
+	<style>
+		.menu{
+			background-color:#ffffff;
+			
+		}
+		.menu ul{
+			margin:0px;
+			padding:0px;
+		}
+		
+		.menu ul li{
+			list-style:none;
+			float:left;
+			height:32px;
+			margin:1px;
+			padding-left:32px;
+			padding-right:5px;
+			line-height:32px;
+			font-size:13px;
+		}
+		.menu ul li.save{
+			background:url(images/save.png) no-repeat 8px 8px #fefefe;
+			
+		}
+		.menu ul li.svn{
+			background:url(images/04_45.png) no-repeat 8px 8px #fefefe;
+		}
+		.menu ul li.new{
+			background:url(images/page.png) no-repeat 8px 8px #fefefe;
+		}
+	</style>
+	
+	<div class="menu" height="33" width="100%">
+		<ul>
+			<li id="refreshBtn" class="save">渲染</li>
+			<li id="saveBtn" class="save">保存</li>
+			<li class="svn">备份</li>
+			<li class="new">新建页面</li>
+		</ul>
+	</div>
+	<displayObject width="100%" height="100%">
+		<textarea id="code" name="code" ></textarea>
+	</displayObject>
+	<script>
+		var _self = $(dom);
+		public var onRefresh:Function = null;
+		private var editor = null;
+		private var text = null;
+		private var purl = null;
+		private var pdata = null;
+		function init(){
+			#code.val("<!-- 模块类 -->\r\n<module>\r\n\t<div>Hello World!</div>\r\n\t<script>\r\n\t\tvar init(value){alert('Hello World!');}\r\n\t<" + "/script>\r\n</module>");
+			editor = CodeMirror.fromTextArea(#code[0], {
+				  mode: "text/html",
+				  styleActiveLine: true,
+				  lineNumbers: true,
+				  lineWrapping: true,
+				  extraKeys: {"Alt-F": "findPersistent"},
+		    	  matchBrackets: true
+				});
+				
+			editor.setSize("100%","100%");
+			//$(window).bind("keydown",keyEvt);
+			$(window).bind("keyup",keyEvt);
+			#saveBtn.click(saveEvt);
+			#refreshBtn.click(refEvt);
+			editor.setOption("theme", "xq-light");
+		}
+
+		/**
+		 * 渲染实践
+		 */
+		private function refEvt():void{
+			if(onRefresh){
+				onRefresh({target:@this});
+			}
+		}
+
+		private function saveEvt(){
+			asjs.send("api/ctrl?do=saveCode",function(e){
+				//alert(e.target.data);
+			},$.extend(pdata,{code:editor.getValue()}));
+		}
+
+		/**
+		 * 加载数据
+		 */
+		public function load(url,data){
+			purl = url;
+			pdata = data;
+			asjs.load(url,function(e){
+				var xml = new XML(e.target.data);
+				text = xml.child("data").toString();
+				#code.val(text);
+				editor = CodeMirror.fromTextArea(#code[0], {
+					  mode: "text/html",
+					  styleActiveLine: true,
+					  lineNumbers: true,
+					  lineWrapping: true,
+					  extraKeys: {"Alt-F": "findPersistent"}
+					});
+				editor.setOption("theme", "xq-light");
+				editor.setSize("100%","100%");
+				
+				super.trigger();
+			},data);
+		}
+
+
+		private var ctrlFlag = false;
+		private function keyEvt(e){
+			if(!_self.is(":hidden")){
+				if(e.type == "keydown"){
+					if(e.keyCode == 17){
+						ctrlFlag = true;
+						
+					}
+
+					if(ctrlFlag && e.key.toLowerCase() == "s"){
+						saveEvt();
+						return false;
+					}
+				}else if(e.type == "keyup"){
+					if(e.keyCode == 17){
+						ctrlFlag = false;
+						
+					}
+				}
+			}
+			
+		}
+		
+		
+		/**
+		 * 返回数据
+		 */
+		public function get data():String{
+			return editor.getValue();
+		}
+
+		public function trigger(){
+			super.trigger();
+		}
+	</script>
+</vbox>

@@ -1,0 +1,15 @@
+<@import value="component.*" />
+<desktop>
+	<HDividedBox>
+		<root.Editor id="editor" width="100%" height="100%" />
+		<$component.HtmlLoader id="loader" width="100%" height="100%" url="/index.test" />
+	</HDividedBox>
+	<script>
+		var _self = $(dom);
+		function init():void{
+			editor.onRefresh = function(e){
+				loader.postMessage(e.target.data);
+			}
+		}
+	</script>
+</desktop>

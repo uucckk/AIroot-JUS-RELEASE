@@ -1,0 +1,13 @@
+<!-- TEST功能 -->
+<component.desktop>
+	<div height="36">
+		测试页
+	</div>
+	<$component.HtmlLoader width="100%" height="100%" id="loader" url="test.html"/>
+	<script>
+		var _self = $(dom);
+		function init():void{
+			loader.url = "http://www.baidu.com/";
+		}
+	</script>
+</component.desktop>

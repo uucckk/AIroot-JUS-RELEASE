@@ -1,0 +1,143 @@
+<@import value="component.*" />
+<displayObject>
+	<style>
+				
+		body { 
+			position:absolute; z-index:42;border:1px solid #eeeeee;
+			border:1px solid #cccccc;
+			border:1px solid #888c99;
+			border-top:3px solid #165cdc;
+			box-shadow:0px 5px 8px 5px rgba(0,0,0,0.2);
+		}
+		
+		.dialogHeader{
+			user-select:none;
+		}
+		
+		.dialogHeader, .dialogHeader_r, .dialogHeader_c { display:block; overflow:hidden; height:32px;border-bottom:1px solid #dddddd;line-height:30px;}
+		.dialogHeader .close { display:block; overflow:hidden; text-indent:-1000px; width:19px; height:19px; float:right; margin-top:5px;}
+		.dialogHeader h1 { display:block; overflow:hidden; height:32px; padding:0 5px 0 20px; line-height:32px; background-position:0 -450px;}
+		
+		.dialogHeader { padding-left:5px; background-position:0 0; position:relative; cursor:move;}
+		.dialogHeader_r { padding-right:5px; background-position:100% -50px;}
+		.dialogHeader_c { padding:0; background-position:0 -100px; background-repeat:repeat-x;}
+		
+		.dialogHeader .close { background-position:0 0; right:4px;}
+		.dialogHeader .close:hover { background-position:0 -50px;}
+		
+		
+
+		.dialogHeader, .dialogHeader_r, .dialogHeader_c { background-color:#ffffff;}
+		
+		.dialogHeader .close{ background:url(@res('dialogpanel_icon.png')) no-repeat;}
+		
+		
+		.dialogContent {background-color:#ffffff;}
+
+		
+		#title{
+			font-size:14px;
+		}
+	</style>
+	<div id="header" class="dialogHeader" onselectstart="return false;" oncopy="return false;" onpaste="return false;"oncut="return false;">
+		<div class="dialogHeader_r">
+			<div class="dialogHeader_c">
+				<a class="close" href="#close">close</a>
+				<span id="title">标题</span>
+			</div>
+
+		</div>
+	</div>
+
+	<contain id="content" class="dialogContent layoutBox unitBox">
+		
+	</contain>
+
+	<script>
+		var _self = $(dom);
+		var value = null;
+		public function init(title:String = "弹出框",width:int = 700,height:int = 400){
+			#title.text(title);
+			#content.width(width);
+			#content.height(height);
+			
+			_self.find(".close").click(function(){
+				_self.remove();
+			});
+
+			#header.bind("mousedown",mouseEvt);
+			#header.bind("mouseup",mouseEvt);
+			$(window).bind("mousemove",mouseEvt);
+
+			PopManager.addPopUp(@this);
+			
+			_self.css("left",($(window).width() - width)/2).css("top",($(window).height()*0.80 - height)/2 + "px");
+			$("[class_id='component.Dialog']").css("z-index",998);
+			_self.css("z-index",999);
+		}
+
+		private var mouseFlag = false;
+		private var tx = 0;
+		private var ty = 0;
+		private var mx = 0;
+		private var my = 0;
+		private function mouseEvt(e){
+			switch(e.type){
+				case "mouseup":
+					mouseFlag = false;
+					document.onselectstart = null;
+					break;
+				case "mousedown":
+					mouseFlag = true;
+					document.onselectstart = new Function("return false;");
+					tx = parseInt(_self.css("left"));
+					ty = parseInt(_self.css("top"));
+					mx = e.clientX;
+					my = e.clientY;
+					
+					break;
+				case "mousemove":
+					if(mouseFlag){
+						_self.css({left:tx + (e.clientX - mx),top:ty + (e.clientY - my)});
+					}
+					break;
+				default:
+					trace(e.target.data);
+			}
+		}
+	
+		/**
+		 * 加载网页
+		 */
+		public function load(url,value:Array = [],listener:Function){
+			#content.loadModule(url,value,function(e){
+				e.close = function(){
+					close();
+				}
+				if(listener){
+					listener(e);
+				}
+				content.trigger(0);
+			});
+		}
+		
+		
+		public function addChild(obj:Object):void{
+			#content.addChild(obj);
+			content.trigger();
+			
+		}
+
+		/**
+		 * close Dialog
+		 */
+		public function close(close:Object){
+			_self.remove();
+		}
+
+		public function finalize(){
+			$(window).unbind("mousemove",mouseEvt);
+			_self = null;
+		}
+	</script>
+</displayObject>
