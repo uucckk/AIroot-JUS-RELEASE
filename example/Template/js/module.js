@@ -1172,7 +1172,6 @@ function URLLoader(id){
 					p = lst[i];
 					switch(p.type){
 						case "P":
-							//_MODULE_CONTENT_LIST_ATTR_[p.name.replace(/[\b]/g,uuid)] = eval(p.value.replace(/[\b]/g,uuid));
 							param.push(p.name.replace(/[\b]/g,uuid),p.value.replace(/[\b]/g,uuid));
 						break;
 						case "S"://执行基本函数
@@ -1188,8 +1187,6 @@ function URLLoader(id){
 						break;
 						case "C"://执行命令函数
 							AddC2C(uuid,p,__APPDOMAIN__)//AddCommandToCompoent
-							//__PUSH_COMMAND__(uuid,__NAME__,'-lang',getModule('.Lang',__APPDOMAIN__)({target:window[uuid + 'a1'],data:'lang/index-lang.json'}));
-							//__PUSH_COMMAND__(uuid,p.name.replace(/[\b]/g,uuid),'-lang',getModule('.Lang',__APPDOMAIN__)({target:window[uuid + 'a1'],data:'lang/index-lang.json'}));
 						break;
 						case "T"://执行外连接函数
 							if(!_MODULE_INNER_[uuid]){
@@ -1209,7 +1206,6 @@ function URLLoader(id){
 					_MODULE_CONTENT_LIST_ATTR_[param[i]] = eval(param[i+1]);
 				}
 				if(value != undefined){
-					
 					_MODULE_CONTENT_LIST_ATTR_[uuid] = value;
 				}
 				//初始化列表
@@ -1217,7 +1213,7 @@ function URLLoader(id){
 				return window[uuid];
 			}
 		}
-		return nil;
+		return null;
 	}
 	
 	function __UUID__(){
