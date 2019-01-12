@@ -126,22 +126,22 @@
 		var dragFlag:Boolean = false;
 		var dx:int = 0;
 		function init(){
-			#leftBtn.hide();
-			#rightBtn.hide();
-			#leftBtn.click(leftEvt);
-			#rightBtn.click(rightEvt);
-			#content.find(">div").each(function(){
+			$(#leftBtn).hide();
+			$(#rightBtn).hide();
+			$(#leftBtn).click(leftEvt);
+			$(#rightBtn).click(rightEvt);
+			$(#content).find(">div").each(function(){
 				var $this = $(this);
 				$this.attr("tabname","n" + count);
 				var li = $("<li name='n" + count + "' onclick='@this.tab(" + count + ")'><label>" + ($this.attr("label") ? $this.attr("label") :  $this.find("h1.label").html())  + "</label></li>");
 				$this.find("h1.label").remove();
-				#menuLabel.append(li);
+				$(#menuLabel).append(li);
 				count ++;
 			});
 
-			#menuLabel
+			$(#menuLabel)
 			.bind("mousedown",function(e){
-				if(#menuLabel.width()>#tabs.width()){
+				if($(#menuLabel).width()>$(#tabs).width()){
 					dragFlag = true;
 					dx = e.pageX;
 				}
@@ -168,15 +168,15 @@
 		 */
 		public function tab(index){
 			tagIndex = index;
-			#menuLabel.find(">li").removeClass("selected");
-			var ml = #menuLabel.find(">li[name='n" + index + "']");
+			$(#menuLabel).find(">li").removeClass("selected");
+			var ml = $(#menuLabel).find(">li[name='n" + index + "']");
 			if(ml.length>0){
 				ml.addClass("selected");
-				#content.find(">div").hide();
-				#content.find(">div[tabname='n" + index + "']").show();
+				$(#content).find(">div").hide();
+				$(#content).find(">div[tabname='n" + index + "']").show();
 				content.trigger();
 			}else{
-				var li = #menuLabel.find(">li");
+				var li = $(#menuLabel).find(">li");
 				if(li.length>0){
 					tab(li.attr("name").substring(1));
 				}
@@ -203,8 +203,8 @@
 			html.attr("tabname","n" + count);
 			var li = $("<li name='n" + count + "' onclick='@this.tab(" + count + ")' " + tip + "><label>" + label + "</label></li>");
 			li.append("<a class='closeBtn' onclick='@this.closeTab(" + count + ")'>&nbsp;&nbsp;&nbsp;&nbsp;</a>");
-			#menuLabel.append(li);
-			#content.append(html);
+			$(#menuLabel).append(li);
+			$(#content).append(html);
 			preTag = tagIndex;
 			tab(count);
 			count ++
@@ -217,9 +217,9 @@
 		 * 按指定索引关闭Tab页
 		 */
 		public function closeTab(index){
-			#menuLabel.find(">li[name='n" + index + "']").remove();
-			#content.find(">div[tabname='n" + index + "']").remove();
-			var li = #menuLabel.find(">li");
+			$(#menuLabel).find(">li[name='n" + index + "']").remove();
+			$(#content).find(">div[tabname='n" + index + "']").remove();
+			var li = $(#menuLabel).find(">li");
 			tab(preTag);
 		}
 
@@ -230,19 +230,19 @@
 		}
 
 		private function autoWidth():void{
-			if(#menuLabel.width()>#tabs.width()){
-				#leftBtn.show();
-				#rightBtn.show();
+			if($(#menuLabel).width()>$(#tabs).width()){
+				$(#leftBtn).show();
+				$(#rightBtn).show();
 			}else{
-				#leftBtn.hide();
-				#rightBtn.hide();
-				#menuLabel.css("left",0);
+				$(#leftBtn).hide();
+				$(#rightBtn).hide();
+				$(#menuLabel).css("left",0);
 			}
 		}
 
 		private function leftEvt():void{
-			var li = #menuLabel.children("li");
-			var rightL = #labContent.offset().left + #labContent.outerWidth(true);
+			var li = $(#menuLabel).children("li");
+			var rightL = $(#labContent).offset().left + $(#labContent).outerWidth(true);
 			var p = null;
 			var e = null;
 			for(var i:int = 0;i<li.length;i++){
@@ -253,12 +253,12 @@
 				}
 			}
 			if(e){
-				#menuLabel.animate({left:parseInt(#menuLabel.css("left")) - 100},500);//(e.offset().left + e.outerWidth(true) - rightL)
+				$(#menuLabel).animate({left:parseInt($(#menuLabel).css("left")) - 100},500);//(e.offset().left + e.outerWidth(true) - rightL)
 			}
 		}
 
 		private function rightEvt():void{
-			var li = #menuLabel.children("li");
+			var li = $(#menuLabel).children("li");
 			var rightL = #labContent.offset().left;
 			var p = null;
 			var e = null;
@@ -270,7 +270,7 @@
 				}
 			}
 			if(e){
-				#menuLabel.animate({left:parseInt(#menuLabel.css("left")) + 100},500);//(e.offset().left + e.outerWidth(true) - rightL)
+				$(#menuLabel).animate({left:parseInt($(#menuLabel).css("left")) + 100},500);//(e.offset().left + e.outerWidth(true) - rightL)
 			}
 
 		}

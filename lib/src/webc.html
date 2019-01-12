@@ -159,9 +159,9 @@
 		}
 		
 		function resizeEvt(e){
-			#login.css("left",($(window).width() - #login.width())/2 + "px");
-			#login.css("top",($(window).height() - 36 - #login.height())/2 + "px");
-			#login.css("animation","ca 0.5s");
+			$(#login).css("left",($(window).width() - $(#login).width())/2 + "px");
+			$(#login).css("top",($(window).height() - 36 - $(#login).height())/2 + "px");
+			$(#login).css("animation","ca 0.5s");
 		}
 		
 		function test(e){
@@ -172,7 +172,7 @@
 		
 		
 		function initStage(){
-			#area.empty();
+			$(#area).empty();
 			if(username.value == ""){
 				alert("please input username.");
 				return;
@@ -181,7 +181,7 @@
 				alert("please input password.");
 				return;
 			}
-			#login.fadeOut();
+			$(#login).fadeOut();
 			$(window).keydown(function(){
 				ipt.focus();
 			});
@@ -190,18 +190,18 @@
 			ws.onerror = function(e){
 				$(window).unbind("keydown");
 				setTimeout(function(){
-					#login.show();
-					#login.css("animation","ca 0.5s");
-					#username.focus();
+					$(#login).show();
+					$(#login).css("animation","ca 0.5s");
+					$(#username).focus();
 				},1000);
 				
 			}
 			ws.onclose = function(e){
 				$(window).unbind("keydown");
 				setTimeout(function(){
-					#login.show();
-					#login.css("animation","ca 0.5s");
-					#username.focus();
+					$(#login).show();
+					$(#login).css("animation","ca 0.5s");
+					$(#username).focus();
 				},1000);
 			}
 			ws.onopen = function(e){
@@ -216,7 +216,7 @@
 		
 		function send(e){
 			if(e.keyCode == 13){
-				#area.append("<div class='iptLine'>" + ipt.value + "</div>");
+				$(#area).append("<div class='iptLine'>" + ipt.value + "</div>");
 				if(ipt.value == "cls"){
 					area.innerHTML = "";
 				}else{

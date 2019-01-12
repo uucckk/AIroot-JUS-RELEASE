@@ -212,10 +212,10 @@
 		/**
 		 * 设置过滤器
 		 */
-		public function set filter(func){
-			this._filter = func;
+		public function set filter(value){
+			this._filter = value;
 			var result = initTree(data);
-			#content.html(result);
+			$(#content).html(result);
 		}
 
 
@@ -332,7 +332,7 @@
 			expendFlag = null;
 			expendFlag = {};
 			var result = initTree(value);
-			#content.html(result);
+			$(#content).html(result);
 			
 		}
 

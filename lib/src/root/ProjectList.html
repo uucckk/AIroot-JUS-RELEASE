@@ -130,8 +130,8 @@
 			tree.onClick = function(e){
 				//trace("click",e.target.data.toXMLString());
 			}
-			
-			#content.contextMenu(
+			/*
+			$(#content).contextMenu(
 					function(e){
 						if($(e.target).attr("isdir") == "true"){
 							return true;
@@ -164,7 +164,7 @@
 						}
 						
 					});
-			#content.contextMenu(
+			$(#content).contextMenu(
 					function(e){
 						if($(e.target).attr("isdir") == "true"){
 							return false;
@@ -197,7 +197,7 @@
 						}
 						
 					});
-			
+			*/
 			asjs.load("/index.api?do=ls&path=/",function(e){
 				var xml = new XML(e.target.data).child("data");
 				tree.dataProvider = xml;

@@ -15,11 +15,11 @@
 		}
 
 		public function width(value){
-			#iframe.width(value);
+			$(#iframe).width(value);
 		}
 
 		public function height(value){
-			#iframe.height(value);
+			$(#iframe).height(value);
 		}
 
 		public function get content(){
@@ -44,7 +44,7 @@
 
 
 		public function set url(value:String):void{
-			#iframe[0].src = value;
+			#iframe.src = value;
 		}
 		
 		
@@ -57,7 +57,7 @@
 		
 		
 		public function trigger(){
-			#iframe.height(_self.height());
+			$(#iframe).height(_self.height());
 		}
 		
 	</script>

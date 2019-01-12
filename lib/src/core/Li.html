@@ -2,6 +2,7 @@
 <li:Module @onclick="" >
 	<@content/>
 	<script>
+		var _self = $(dom);
 		function init(){
 			_self.bind("click",function(){
 				alert("click");
