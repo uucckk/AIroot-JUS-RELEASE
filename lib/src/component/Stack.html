@@ -1,9 +1,4 @@
-<!-- 
-	堆栈面板
-	@author 	sunxy
-	@version	1.1
-	@type		公共集成组件
- -->
+<!-- 堆栈面板 -->
 <@import value="component.*" />
 <contain width="100%" height="100%">
 	<position id="content" width="100%" height="100%">
@@ -11,16 +6,10 @@
 	</position>
 	
 	<script>
-		
 		import component.Loading;
 		import component.Layout;
-		
-		var _self = $(dom);
 		private var moduleList = {};
-		private var titleMap = {};
 		private var loader = null;
-		private var _onChange:Function = null;
-		
 		function init(){
 			
 		}
@@ -33,9 +22,6 @@
 			for(var m in moduleList){
 				if(m != className){
 					$(moduleList[m].dom).attr("left","10000");
-					if(_onChange){
-						_onChange({target:@this,moduleName:m,title:titleMap[m],guid:moduleList[m].guid,type:"focusOut"});
-					}
 				}
 			}
 			if(moduleList[className]){
@@ -44,24 +30,17 @@
 				}
 				$(moduleList[className].dom).attr("left","0").css({"left":"0px","top":"0px"});
 				content.trigger(0);
-				if(_onChange){
-					_onChange({target:@this,moduleName:className,title:titleMap[className],guid:moduleList[className].guid,type:"change"});
-				}
 				return;
 			}
-			#content.addChild(loader = new Loading());
+			#content.appendChild(loader = new Loading());
 			$(loader.dom).css({"left":"0px","top":"0px"});
 			super.trigger(0);
 			moduleList[className] = null;
 			var layout = new Layout();
-			layout.guid = asjs.uuid();
-			#content.addChild(layout);
+			#content.appendChild(layout);
 			moduleList[className] = layout;
 			$(layout.dom).attr("left","0").attr("width","100%").attr("height","100%");
-			if(_onChange){
-				_onChange({target:@this,moduleName:className,title:titleMap[className],guid:layout.guid,type:"loading"});
-			}
-			$(layout.dom).addModule(className,[],function(obj){
+			layout.dom.addModule(className,[],function(obj){
 				$(loader.dom).remove();
 				$(layout.dom).css({"left":"0px","top":"0px"});
 				try{
@@ -72,84 +51,7 @@
 				if(listener){
 					listener(obj);
 				}
-				if(_onChange){
-					_onChange({target:@this,moduleName:className,title:titleMap[className],guid:layout.guid,type:"complete"});
-				}
 			});
-		}
-		
-		
-		/**
-		 * 监听是否有变化
-		 * 例如，添加，删除，点选1
-		 * @param value		监听变化函数
-		 * @param target	监听对象
-		 */
-		public function set onChange(value:Function,target:Object):void{
-			_onChange = value;
-		}
-		
-		/*
-		 * 通过Guid选择Module显示
-		 */
-		public function selectedModuleByGuid(value:Array):void{
-			var module = null;
-			var className = null;
-			for(var m in moduleList){
-				module = moduleList[m];
-				$(module.dom).attr("left","10000");
-				if(_onChange){
-					_onChange({target:@this,moduleName:m,title:titleMap[m],guid:module.guid,type:"focusOut"});
-				}
-			}
-			
-			//判断如何布局
-			var lst = [];
-			for(var m in moduleList){
-				module = moduleList[m];
-				for(var k in value){
-					guid = value[k];
-					if(module.guid == guid){
-						lst.push(module);
-					}
-				}
-			}
-			
-			//整理布局
-			var width = _self.width()/lst.length;
-			var height = _self.height();
-			for(var m:int = 0;m<lst.length;m++){
-				module = lst[m];
-				$(module.dom).attr("left",m*width).attr("width",width - (m != lst.length - 1 ? 8 : 0)).css({"left":"0px","top":"0px"});//.attr("height",height)
-				if(lst.length == 3){
-					if(m == 1 || m == 2){
-						//module._MODULE_CONTENT_.attr("height",height/2);
-					}
-				}
-				if(_onChange){
-					_onChange({target:@this,moduleName:m,title:titleMap[m],guid:module.guid,type:"change"});
-				}
-			}
-			content.trigger(0);
-		}
-		
-		
-		/**
-		 * 通过模块名称移除模块
-		 * @param className	模块名称
-		 */
-		public function removeModuleByClassName(className:String):void{
-			
-		}
-		
-		
-		
-		/**
-		 * 通过title移除模块
-		 * @param className	模块名称
-		 */
-		public function removeModuleByTitle():void{
-		
 		}
 	</script>
 </contain>

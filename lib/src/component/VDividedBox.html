@@ -11,7 +11,6 @@
 	</style>
 	<@content />
 	<script>
-		var _self = $(dom);
 		private var downFlag:Boolean = false;
 		var frontElem = null;
 		var endElem = null;
@@ -20,11 +19,12 @@
 		var al = 0;
 		var br = 0;
 		var can = false;
+		var _self = $(dom);
 		function init(){
 			_self.bind("mousedown",mouseDown);
 			_self.bind("mousemove",mouseMove);
 			$(window).bind("mouseup",mouseUp);
-			fromtElem = _self.find(">div").eq(0);
+			frontElem = _self.find(">div").eq(0);
 			endElem = _self.find(">div").eq(_self.find(">div").length - 1);
 		}
 

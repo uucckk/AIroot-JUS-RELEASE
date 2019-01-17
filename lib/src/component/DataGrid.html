@@ -170,7 +170,6 @@
 		&nbsp;
 	</div>
 	<script>
-		var _self = $(dom);
 		//page modify
 		private var url:String = "";
 		private var _comp:Event = null;
@@ -213,12 +212,12 @@
 		public var onDblClick:Function = null;
 		
 		
-		
+		var _self = $(dom);
 		function init(){
-			dgContent = #content;
-			gridContent = #grid;
+			dgContent = $(#content);
+			gridContent = $(#grid);
 			gridContent.mousemove(function(e){
-				var ty = e.pageY - #content.offset().top + #content.scrollTop();
+				var ty = e.pageY - dgContent.offset().top + dgContent.scrollTop();
 				var i = parseInt(ty/_rowHeight);
 			
 				if(rollIndex != -1 && rowLst[rollIndex] && rollIndex != selectedIndex){
@@ -234,7 +233,7 @@
 			});
 			
 			gridContent.click(function(e){
-				var ty = e.pageY - #content.offset().top + #content.scrollTop();
+				var ty = e.pageY - dgContent.offset().top + dgContent.scrollTop();
 				var i = parseInt(ty/_rowHeight);
 				if(selectedIndex != -1 && rowLst[selectedIndex]){
 					rowLst[selectedIndex].css("background-color",selectedIndex % 2 == 0 ? "#fefefe" : "#f5f5f5");	
@@ -248,7 +247,7 @@
 				}
 			});
 			gridContent.bind("dblclick",function(e){
-				var ty = e.pageY - #content.offset().top + #content.scrollTop();
+				var ty = e.pageY - dgContent.offset().top + #content.scrollTop();
 				var i = parseInt(ty/_rowHeight);
 				if(selectedIndex != -1 && rowLst[selectedIndex]){
 					rowLst[selectedIndex].css("background-color",selectedIndex % 2 == 0 ? "#fefefe" : "#f5f5f5");	
@@ -302,7 +301,7 @@
 
 			});
 			
-			#pageBar.on("keyup","input",function(e){
+			$(#pageBar).on("keyup","input",function(e){
 				var $this = $(this);
 				var p = $this.val();
 				if(e.keyCode == 13){
@@ -358,7 +357,7 @@
 						if(!vl || (vl + "").length == 0){
 							vl = "&nbsp;";
 						}
-						pTd.addChild(vl);
+						pTd.append(vl);
 						pTd.width(_headWidth[c]);
 						if(cp.fixed){
 							pTd.css("position","relative");
@@ -441,7 +440,7 @@
 			}
 			thead.append(tr);
 			table.append(thead);
-			#head.append(table);
+			$(#head).append(table);
 			initHTML(table);
 		}
 		
@@ -451,7 +450,7 @@
 		 */
 		public function set htmlHeader(table:Table):void{
 			initHTML(table);
-			#head.append(initHTML(table));
+			$(#head).append(initHTML(table));
 		}
 		
 		public function set dataProvider(value:Array){
@@ -472,7 +471,7 @@
 				$this.wrapInner("<div style='overflow:hidden;' class='resize-th'></div>");
 			});
 
-			headerHeight = table.height();
+			var headerHeight = table.height();
 			
 			var ltr = $("tr",$thead);
 			var colLength = 0;
@@ -596,9 +595,12 @@
 					dWidth = $th.width() - 1;
 					contentWidth +=  dWidth - _headWidth[index];
 					_headWidth[index] = dWidth;
-					for(var r:int = startRow;rowLst.length>0 && r<endRow;r++){
-						rowLst[r].width(contentWidth);
-						rowLst[r].children("div").eq(index).width(_headWidth[index]);
+					for(var r:int = startRow;r<endRow;r++){
+						if(rowLst[r]){
+							rowLst[r].width(contentWidth);
+							rowLst[r].children("div").eq(index).width(_headWidth[index]);
+						}
+						
 					}
 				}
 				
@@ -650,7 +652,7 @@
 			}
 			sb += "<li><input id='$ipt' type='text' class='$pageIpt' /></li>";
 			sb += "</ul>"
-			#pageBar.html(sb);
+			$(#pageBar).html(sb);
 		}
 		
 		
@@ -813,17 +815,20 @@
 				resizeEvt();
 				//重新计算一边contentWidth
 				contentWidth = 0;
-				var th = #head.find("thead>tr").eq(0).children("th");
+				var th = $(#head).find("thead>tr").eq(0).children("th");
 				for(var i:int = 0;i<th.length;i++){
 					contentWidth += parseInt(th.eq(i).outerWidth());
 				}
-				for(var r:int = startRow;rowLst.length>0 && r<endRow;r++){
-					rowLst[r].width(contentWidth);
-					for(var i:int = 0;i<th.length;i++){
-						_headWidth[i] = th.eq(i).outerWidth() - 1;
-						rowLst[r].children("div").eq(i).width(_headWidth[i]);
-						
+				for(var r:int = startRow;r<endRow;r++){
+					if(rowLst[r]){
+						rowLst[r].width(contentWidth);
+						for(var i:int = 0;i<th.length;i++){
+							_headWidth[i] = th.eq(i).outerWidth() - 1;
+							rowLst[r].children("div").eq(i).width(_headWidth[i]);
+							
+						}
 					}
+					
 					
 				}
 			},0);
