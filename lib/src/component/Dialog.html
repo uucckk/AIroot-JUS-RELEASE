@@ -57,16 +57,16 @@
 		var _self = $(dom);
 		var value = null;
 		public function init(title:String = "弹出框",width:int = 700,height:int = 400){
-			#title.text(title);
-			#content.width(width);
-			#content.height(height);
+			$(#title).text(title);
+			$(#content).width(width);
+			$(#content).height(height);
 			
 			_self.find(".close").click(function(){
 				_self.remove();
 			});
 
-			#header.bind("mousedown",mouseEvt);
-			#header.bind("mouseup",mouseEvt);
+			$(header).bind("mousedown",mouseEvt);
+			$(header).bind("mouseup",mouseEvt);
 			$(window).bind("mousemove",mouseEvt);
 
 			PopManager.addPopUp(@this);
@@ -123,7 +123,7 @@
 		
 		
 		public function addChild(obj:Object):void{
-			#content.addChild(obj);
+			$(#content).addChild(obj);
 			content.trigger();
 			
 		}
