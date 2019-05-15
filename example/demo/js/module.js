@@ -1,9 +1,9 @@
 /**
  * @author sunxy
  * @email	uucckk@163.com
- * @version 0.9.10
+ * @version 0.12.00
  * http://www.airoot.cn/
- * @modify date '2019-01-10';
+ * @modify date '2019-05-15';
  */
 
 "use strict";
@@ -540,7 +540,7 @@ function URLLoader(id){
 	//浏览器版本检测
 	var __NAVI__ = navigator.appName;
 	var __VERS__ = navigator.appVersion;
-
+	var __$__ = {};//标志变量
 	//初始实例化
 	var __POS_VALUE__ = null;
 	var __WINDOW__ = {};//全局静态函数总和
@@ -677,14 +677,14 @@ function URLLoader(id){
 		//添加弹出框
 		this.addPopUp = function(child,content){//弹出类，弹出容器
 			if(!content){
-				content = $("body");
+				content = document.body;
 			}
 			if(child.dom){
 				$(child.dom).bind("mousedown",function(){
 					PopManager.bringToFront(child);
 				});
-				content.addChild(child);
-				list = getList(content);
+				content.appendChild(child);
+				var list = getList(content);
 				if(list.length>0){
 					list = list.child;
 					
@@ -1248,7 +1248,7 @@ function URLLoader(id){
 	};
 	
 	
-	var JUS = {};
+	var JUS = {PATH:""};
 	//加载模块
 	HTMLElement.prototype.loadModule = function(){//module,value,listener,appDomain
 		var p = [this];
@@ -1295,7 +1295,7 @@ function URLLoader(id){
 				return;
 			}
 		}
-		var url = "juis/" + className.replace(/\./g,'/') + ".html";
+		var url = JUS.PATH + "juis/" + className.replace(/\./g,'/') + ".html";
 		var load = window.location.toString().indexOf("http:") == 0 ? asjs.post : asjs.get;
 		var _CF_ = null;
 		load(url,function(e){
@@ -1334,7 +1334,7 @@ function URLLoader(id){
 				return;
 			}
 		}
-		var url = "juis/" + module.replace(/\./g,'/') + ".html";
+		var url = JUS.PATH + "juis/" + module.replace(/\./g,'/') + ".html";
 		var load = window.location.toString().indexOf("http:") == 0 ? asjs.post : asjs.get;
 		var _CF_ = null;
 		load(url,function(e){
@@ -1375,7 +1375,7 @@ function URLLoader(id){
 				return;
 			}
 		}
-		var url = "juis/" + module.replace(/\./g,'/') + ".html";
+		var url = JUS.PATH + "juis/" + module.replace(/\./g,'/') + ".html";
 		var load = window.location.toString().indexOf("http:") == 0 ? asjs.post : asjs.get;
 		var _CF_ = null;
 		load(url,function(e){
@@ -1423,7 +1423,7 @@ function URLLoader(id){
 				
 			}else if(type == "function"){
 				return function(){
-					return new mod(arguments);
+					return new mod(__$__,arguments);
 				};
 			}
 			
